@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WORBS</title>
+<style>
+  :root{
+    --bg:#FFF7F9;
+    --bg-tint:#FDEAF0;
+    --bg-tint-deep:#FBDCE7;
+    --ink:#3B1F2B;
+    --ink-soft:#6B4A57;
+    --pink:#F0A8C4;
+    --pink-deep:#E1699A;
+    --pink-pale:#FBD8E4;
+    --rosegold:#B76E79;
+    --line: rgba(59,31,43,0.10);
+    --line-strong: rgba(59,31,43,0.18);
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--pink-pale);}
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:200;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:1.4rem 2.4rem;
+    background:rgba(255,247,249,0.88);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar .brand{
+    font-family:var(--serif);
+    font-size:1.3rem;
+    letter-spacing:0.08em;
+    cursor:pointer;
+  }
+  .topbar .brand span{color:var(--pink-deep);}
+  .topbar .back{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:none;
+    align-items:center;
+    gap:0.4rem;
+    cursor:pointer;
+  }
+  .topbar .back:hover{color:var(--pink-deep);}
+  body.detail .topbar .back{display:flex;}
+
+  /* ================= LANDING ================= */
+  .hero{
+    min-height:82vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:4rem 2rem 3rem;
+  }
+  .wordmark{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:clamp(3.6rem, 13vw, 8.5rem);
+    letter-spacing:0.05em;
+    line-height:1;
+    color:var(--ink);
+    margin-bottom:0.3rem;
+  }
+  .wordmark span{color:var(--pink-deep);}
+  .wordmark-rule{
+    width:70px;
+    height:1px;
+    background:var(--rosegold);
+    opacity:0.7;
+    margin:1.5rem auto 1.7rem;
+  }
+  .hero .lede{
+    max-width:480px;
+    font-size:1.02rem;
+    line-height:1.75;
+    color:var(--ink-soft);
+    margin:0 auto;
+    font-style:italic;
+    font-family:var(--serif);
+  }
+  .scroll-cue{
+    margin-top:3rem;
+    font-family:var(--mono);
+    font-size:0.62rem;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:0.55;
+  }
+
+  /* ---------- DIRECTORY ---------- */
+  .directory{
+    max-width:920px;
+    margin:0 auto;
+    padding:2rem 2rem 6rem;
+  }
+  .directory .kicker{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--pink-deep);
+    text-align:center;
+    margin-bottom:2.6rem;
+  }
+  .dir-item{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:1.5rem;
+    padding:1.9rem 0.5rem;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+    transition:padding-left .3s ease, background .3s ease;
+  }
+  .dir-item:hover{
+    background:var(--pink-pale);
+    padding-left:1.3rem;
+  }
+  .dir-item .left{
+    display:flex;
+    align-items:baseline;
+    gap:1.1rem;
+  }
+  .dir-item .num{
+    font-family:var(--mono);
+    font-size:0.75rem;
+    color:var(--rosegold);
+    opacity:0.8;
+  }
+  .dir-item .titles{
+    display:flex;
+    flex-direction:column;
+  }
+  .dir-item h3{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:1.7rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .dir-item .one-liner{
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    margin-top:0.25rem;
+    font-family:var(--sans);
+  }
+  .dir-item .arrow{
+    font-family:var(--serif);
+    font-size:1.4rem;
+    color:var(--pink-deep);
+    transition:transform .3s ease;
+  }
+  .dir-item:hover .arrow{transform:translateX(6px);}
+  .dir-item.external .one-liner::after{
+    content:" ↗ opens the WORBS Beauty site";
+    color:var(--rosegold);
+    font-family:var(--mono);
+    font-size:0.72rem;
+  }
+
+  /* ---------- NEWSLETTER ---------- */
+  .newsletter{
+    background:var(--ink);
+    color:var(--bg);
+    padding:5rem 2rem;
+    text-align:center;
+  }
+  .newsletter .kicker{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--pink);
+    margin-bottom:1.2rem;
+  }
+  .newsletter h2{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:clamp(1.8rem, 4vw, 2.8rem);
+    max-width:640px;
+    margin:0 auto 1rem;
+    line-height:1.25;
+  }
+  .newsletter .sub{
+    max-width:520px;
+    margin:0 auto 2.2rem;
+    color:rgba(255,247,249,0.7);
+    font-size:0.98rem;
+    line-height:1.7;
+  }
+  .newsletter ul{
+    list-style:none;
+    padding:0;
+    margin:0 auto 2.4rem;
+    max-width:520px;
+    text-align:left;
+    display:flex;
+    flex-direction:column;
+    gap:0.7rem;
+  }
+  .newsletter li{
+    font-size:0.9rem;
+    line-height:1.5;
+    color:rgba(255,247,249,0.85);
+    padding-left:1.2rem;
+    position:relative;
+  }
+  .newsletter li::before{
+    content:"—";
+    position:absolute;
+    left:0;
+    color:var(--pink);
+  }
+  .subscribe-row{
+    display:flex;
+    gap:0.6rem;
+    max-width:400px;
+    margin:0 auto;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .subscribe-row input{
+    flex:1;
+    min-width:200px;
+    padding:0.85rem 1.1rem;
+    border-radius:2px;
+    border:1px solid rgba(255,247,249,0.25);
+    background:rgba(255,247,249,0.06);
+    color:var(--bg);
+    font-family:var(--sans);
+    font-size:0.9rem;
+  }
+  .subscribe-row input::placeholder{color:rgba(255,247,249,0.4);}
+  .subscribe-row button{
+    padding:0.85rem 1.5rem;
+    background:var(--pink-deep);
+    color:var(--ink);
+    border:none;
+    border-radius:2px;
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+    cursor:pointer;
+    transition:background .2s ease;
+  }
+  .subscribe-row button:hover{background:var(--pink);}
+  .newsletter .fine{
+    margin-top:1.2rem;
+    font-family:var(--mono);
+    font-size:0.65rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:rgba(255,247,249,0.4);
+  }
+
+  .site-footer{
+    padding:2.6rem 2.4rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:1rem;
+    font-family:var(--mono);
+    font-size:0.62rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:0.6;
+  }
+
+  /* ================= DETAIL VIEWS ================= */
+  .view{display:none;}
+  .view.active{display:block;}
+  #landing.active{display:block;}
+
+  .detail-hero{
+    padding:5rem 2.4rem 3rem;
+    max-width:820px;
+    margin:0 auto;
+    text-align:center;
+  }
+  .detail-hero .code{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--pink-deep);
+    margin-bottom:1rem;
+  }
+  .detail-hero h1{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:clamp(2.4rem, 6vw, 4rem);
+    margin:0 0 0.6rem;
+  }
+  .detail-hero .tagline{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:1.15rem;
+    color:var(--rosegold);
+    margin-bottom:1.6rem;
+  }
+  .detail-hero .overview{
+    font-size:1.02rem;
+    line-height:1.8;
+    color:var(--ink-soft);
+    max-width:640px;
+    margin:0 auto;
+  }
+
+  .section-block{
+    max-width:1000px;
+    margin:0 auto;
+    padding:2.6rem 2.4rem;
+  }
+  .section-block h4{
+    font-family:var(--mono);
+    font-size:0.7rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--rosegold);
+    margin-bottom:1.4rem;
+    display:flex;
+    align-items:center;
+    gap:0.8rem;
+  }
+  .section-block h4::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line-strong);
+  }
+
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:1rem;
+  }
+  .gallery-card{
+    aspect-ratio:4/5;
+    border-radius:6px;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:flex-end;
+    padding:1rem;
+    color:#fff;
+    font-family:var(--sans);
+    font-size:0.82rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+  .gallery-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%);
+    z-index:1;
+  }
+  .gallery-card .label{position:relative; z-index:2;}
+  .gallery-card .tag{
+    position:absolute;
+    top:0.7rem;
+    right:0.7rem;
+    z-index:2;
+    font-family:var(--mono);
+    font-size:0.58rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    background:rgba(255,255,255,0.85);
+    color:var(--ink);
+    padding:0.2rem 0.5rem;
+    border-radius:20px;
+  }
+
+  .g1{background:linear-gradient(135deg, #F0A8C4, #E1699A);}
+  .g2{background:linear-gradient(135deg, #D98E67, #C1603A);}
+  .g3{background:linear-gradient(135deg, #E8C08A, #B76E79);}
+  .g4{background:linear-gradient(135deg, #C98BA0, #8B5A3C);}
+  .g5{background:linear-gradient(135deg, #8B5A3C, #6E4A34);}
+  .g6{background:linear-gradient(135deg, #6E7F4A, #4F5C34);}
+  .g7{background:linear-gradient(135deg, #D4AF6A, #B76E79);}
+
+  .product-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+    gap:1.2rem;
+  }
+  .product-item{
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    padding:1.2rem 1.3rem;
+  }
+  .product-item .pname{
+    font-family:var(--serif);
+    font-size:1.05rem;
+    margin-bottom:0.3rem;
+  }
+  .product-item .pdesc{
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+
+  .cta-row{
+    text-align:center;
+    padding:3rem 2rem 5rem;
+  }
+  .cta-btn{
+    display:inline-block;
+    padding:0.95rem 2.2rem;
+    background:var(--ink);
+    color:var(--bg);
+    border-radius:2px;
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .2s ease;
+  }
+  .cta-btn:hover{background:var(--pink-deep); color:var(--ink);}
+
+  .placeholder-note{
+    text-align:center;
+    font-family:var(--mono);
+    font-size:0.62rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:0.5;
+    margin-top:1rem;
+  }
+
+  @media (max-width:640px){
+    .dir-item h3{font-size:1.3rem;}
+    .detail-hero{padding:3.5rem 1.4rem 2rem;}
+    .section-block{padding:2rem 1.4rem;}
+  }
+
+  /* ---------- RESERVE VIEW: WARM EARTHY OVERRIDE ---------- */
+  #reserve{
+    background:#F6ECE1;
+    color:#3E2A1E;
+  }
+  #reserve .code{color:#B5502E;}
+  #reserve .tagline{color:#8A5A2E;}
+  #reserve .overview{color:#6B4C38;}
+  #reserve h4{color:#8A5A2E;}
+  #reserve h4::after{background:rgba(62,42,30,0.15);}
+
+  .event-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+    gap:1.2rem;
+    max-width:760px;
+    margin:0 auto;
+  }
+  .event-fact{
+    border:1px solid rgba(62,42,30,0.15);
+    border-radius:6px;
+    padding:1.2rem 1rem;
+    text-align:center;
+    background:rgba(255,255,255,0.4);
+  }
+  .ef-label{
+    display:block;
+    font-family:var(--mono);
+    font-size:0.62rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:#B5502E;
+    margin-bottom:0.4rem;
+  }
+  .ef-value{
+    display:block;
+    font-family:var(--serif);
+    font-size:1.15rem;
+    color:#3E2A1E;
+  }
+
+  .reserve-form-block{max-width:520px;}
+  .reserve-form{
+    display:flex;
+    flex-direction:column;
+    gap:0.9rem;
+  }
+  .reserve-form input, .reserve-form select{
+    padding:0.85rem 1rem;
+    border:1px solid rgba(62,42,30,0.25);
+    border-radius:4px;
+    background:rgba(255,255,255,0.6);
+    color:#3E2A1E;
+    font-family:var(--sans);
+    font-size:0.92rem;
+  }
+  .earthy-btn{
+    background:#B5502E;
+    color:#F6ECE1;
+    text-align:center;
+  }
+  .earthy-btn:hover{background:#8A5A2E; color:#F6ECE1;}
+  #reserve .placeholder-note{color:#8A5A2E; opacity:0.7;}
+
+  /* ---------- GET INVOLVED ---------- */
+  .involve-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:1.5rem;
+    max-width:760px;
+  }
+  .involve-card{
+    border:1px solid var(--line-strong);
+    border-radius:8px;
+    padding:2rem 1.6rem;
+    text-align:center;
+  }
+  .ic-label{
+    font-family:var(--serif);
+    font-size:1.4rem;
+    margin-bottom:0.8rem;
+    color:var(--pink-deep);
+  }
+  .ic-desc{
+    font-size:0.88rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin-bottom:1.4rem;
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand" onclick="goHome()">WORB<span>S</span></div>
+    <div class="back" onclick="goHome()">← Back to WORBS</div>
+  </div>
+
+  <!-- ================= LANDING ================= -->
+  <div class="view active" id="landing">
+
+    <section class="hero">
+      <div class="wordmark">WORB<span>S</span></div>
+      <div class="wordmark-rule"></div>
+      <p class="lede">Not a company. A lineage — a single mark held over various crafts,
+        each answering to its own discipline and its own name, all answering, in the end,
+        to the same house.</p>
+      <div class="scroll-cue">Scroll ↓</div>
+    </section>
+
+    <div class="directory">
+      <div class="kicker">The Ledger</div>
+
+      <div class="dir-item" onclick="goTo('abenwaha')">
+        <div class="left">
+          <span class="num">01</span>
+          <div class="titles">
+            <h3>Abenwaha</h3>
+            <div class="one-liner">Culinary, hosting &amp; the experiential table</div>
+          </div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+
+      <a class="dir-item external" href="https://dw3-pixel.github.io/WORBS-/" target="_blank" rel="noopener">
+        <div class="left">
+          <span class="num">02</span>
+          <div class="titles">
+            <h3>WORBS Beauty</h3>
+            <div class="one-liner">Beauty, grooming &amp; the holistic wing</div>
+          </div>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+
+      <div class="dir-item" onclick="goTo('home')">
+        <div class="left">
+          <span class="num">03</span>
+          <div class="titles">
+            <h3>WORBS Home</h3>
+            <div class="one-liner">Furniture, tablescaping &amp; curated objects</div>
+          </div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+
+      <div class="dir-item" onclick="goTo('wranch')">
+        <div class="left">
+          <span class="num">04</span>
+          <div class="titles">
+            <h3>The Wranch</h3>
+            <div class="one-liner">Farm, produce &amp; environmental conservation</div>
+          </div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+
+      <div class="dir-item" onclick="goTo('true-religion')">
+        <div class="left">
+          <span class="num">05</span>
+          <div class="titles">
+            <h3>True Religion</h3>
+            <div class="one-liner">Access &amp; mentorship for underprivileged girls</div>
+          </div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+
+    </div>
+
+    <div class="newsletter">
+      <div class="kicker">Salt of the Matter</div>
+      <h2>Most of what you believe about your own food, your own feed, and your own choices was written by someone selling you something.</h2>
+      <p class="sub">A newsletter for people who'd rather be unsettled than comforted. Ghanaian
+        food stripped of its Western repackaging. Algorithms held to account for what they've
+        trained you to want. No softening, no hedging.</p>
+      <ul>
+        <li>Why "elevated" African cuisine usually means renamed for someone else's comfort</li>
+        <li>What the feed is optimizing for, and it isn't your wellbeing</li>
+        <li>The systems doing the deciding while you think you're deciding</li>
+      </ul>
+      <div class="subscribe-row">
+        <input type="email" placeholder="your@email.com" />
+        <button onclick="alert('Hook this up to your email provider — Substack, Mailchimp, etc.')">Subscribe</button>
+      </div>
+      <div class="fine">No spam. Just salt.</div>
+    </div>
+
+    <div class="site-footer">
+      <div>WORBS — A Working Ledger</div>
+      <div>Content &amp; structure subject to revision</div>
+    </div>
+
+  </div>
+
+  <!-- ================= ABENWAHA ================= -->
+  <div class="view" id="abenwaha">
+    <div class="detail-hero">
+      <div class="code">01 — Culinary &amp; Hosting</div>
+      <h1>Abenwaha</h1>
+      <div class="tagline">The table remembers what the record forgets.</div>
+      <p class="overview">Abenwaha carries the culinary and experiential arm of the house — food
+        built on inherited technique, hosted as an occasion rather than served as a transaction.
+        An all-day table, 9am to midnight, intimate enough to seat twenty and mean it, built
+        around a single rule: everything tastes unmistakably Ghanaian, even the dishes that
+        don't start out that way.</p>
+    </div>
+
+    <div class="section-block">
+      <h4>Meals &amp; Hostings</h4>
+      <div class="gallery-grid">
+        <div class="gallery-card g1"><span class="tag">Add Photo</span><span class="label">Sunday brunch spread</span></div>
+        <div class="gallery-card g2"><span class="tag">Add Photo</span><span class="label">Private hosting, evening table</span></div>
+        <div class="gallery-card g3"><span class="tag">Add Photo</span><span class="label">Waakye, plated for the table</span></div>
+        <div class="gallery-card g4"><span class="tag">Add Photo</span><span class="label">Dessert course</span></div>
+      </div>
+      <div class="placeholder-note">Placeholder tiles — swap in your own photography</div>
+    </div>
+
+    <div class="section-block">
+      <h4>Tablescapes</h4>
+      <div class="gallery-grid">
+        <div class="gallery-card g5"><span class="tag">Add Photo</span><span class="label">Table setting, WORBS Home pieces</span></div>
+        <div class="gallery-card g7"><span class="tag">Add Photo</span><span class="label">Candlelit hosting detail</span></div>
+        <div class="gallery-card g3"><span class="tag">Add Photo</span><span class="label">Pottery &amp; linen styling</span></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h4>On the Table</h4>
+      <div class="product-list">
+        <div class="product-item">
+          <div class="pname">Ferments</div>
+          <div class="pdesc">House-cultured, built for the everyday table.</div>
+        </div>
+        <div class="product-item">
+          <div class="pname">Tea Blends</div>
+          <div class="pdesc">Local botanicals, blended in-house.</div>
+        </div>
+        <div class="product-item">
+          <div class="pname">Spice &amp; Condiments</div>
+          <div class="pdesc">For poultry, fish, stews, and sauces.</div>
+        </div>
+        <div class="product-item">
+          <div class="pname">Dried Foods</div>
+          <div class="pdesc">Pantry staples, shelf-stable, no shortcuts.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <div class="cta-btn" onclick="goTo('reserve')">Reserve a Seat</div>
+    </div>
+  </div>
+
+  <!-- ================= RESERVE (DEBUT HOSTING) ================= -->
+  <div class="view" id="reserve">
+    <div class="detail-hero">
+      <div class="code">The Debut</div>
+      <h1>Abenwaha</h1>
+      <div class="tagline">A Sunday brunch. A birthday table. Twelve seats.</div>
+      <p class="overview">The first Abenwaha hosting doubles as something more personal — a
+        birthday dinner for a friend, opened up to a small table of others. Warm, earthy,
+        unhurried. Twelve seats, and no more.</p>
+    </div>
+
+    <div class="section-block">
+      <div class="event-grid">
+        <div class="event-fact"><span class="ef-label">Date</span><span class="ef-value">October 4</span></div>
+        <div class="event-fact"><span class="ef-label">Time</span><span class="ef-value">11:00 AM prompt</span></div>
+        <div class="event-fact"><span class="ef-label">Format</span><span class="ef-value">Sunday Brunch</span></div>
+        <div class="event-fact"><span class="ef-label">Seats</span><span class="ef-value">12 only</span></div>
+        <div class="event-fact"><span class="ef-label">Mood</span><span class="ef-value">Warm, earthy tones</span></div>
+      </div>
+    </div>
+
+    <div class="section-block reserve-form-block">
+      <h4>Hold Your Seat</h4>
+      <div class="reserve-form">
+        <input type="text" placeholder="Full name" />
+        <input type="text" placeholder="Phone or email" />
+        <select>
+          <option value="">Number of seats</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+        </select>
+        <div class="cta-btn earthy-btn" onclick="alert('Link this to WhatsApp, email, or a booking form — 12 seats only, so consider a waitlist once full.')">Confirm Seat</div>
+      </div>
+      <div class="placeholder-note">11:00 AM prompt — latecomers may lose their seat to the waitlist</div>
+    </div>
+  </div>
+
+  <!-- ================= HOME ================= -->
+  <div class="view" id="home">
+    <div class="detail-hero">
+      <div class="code">03 — Curation</div>
+      <h1>WORBS Home</h1>
+      <div class="tagline">The table Abenwaha sets, built by hand first.</div>
+      <p class="overview">Every table needs somewhere to land the food, and every room needs
+        something worth sitting in. WORBS Home builds the tables, chairs, and objects that make
+        hosting look effortless — candles, incense, bakhoor, and pottery included — for anyone
+        who wants the pieces without needing an occasion for them.</p>
+    </div>
+    <div class="section-block">
+      <h4>The Pieces</h4>
+      <div class="gallery-grid">
+        <div class="gallery-card g5"><span class="tag">Add Photo</span><span class="label">Dining table, made to order</span></div>
+        <div class="gallery-card g7"><span class="tag">Add Photo</span><span class="label">Candle &amp; incense set</span></div>
+        <div class="gallery-card g3"><span class="tag">Add Photo</span><span class="label">Pottery collection</span></div>
+      </div>
+      <div class="placeholder-note">Placeholder tiles — swap in your own photography</div>
+    </div>
+    <div class="cta-row">
+      <div class="cta-btn" onclick="alert('Link this to an inquiry or shop flow')">Commission a Piece</div>
+    </div>
+  </div>
+
+  <!-- ================= WRANCH ================= -->
+  <div class="view" id="wranch">
+    <div class="detail-hero">
+      <div class="code">04 — Farm &amp; Field</div>
+      <h1>The Wranch</h1>
+      <div class="tagline">Where Abenwaha's table begins.</div>
+      <p class="overview">The Wranch is the house's working farm — produce, plants, and flowers
+        grown, not just sourced, paired with a farmacy dispensing what the land yields and
+        monthly hostings that bring people onto the soil itself. It carries the house's
+        environmental conservation work and is the origin point for the clean eating Abenwaha
+        puts on the plate.</p>
+    </div>
+    <div class="section-block">
+      <h4>From the Land</h4>
+      <div class="gallery-grid">
+        <div class="gallery-card g6"><span class="tag">Add Photo</span><span class="label">Produce, harvest day</span></div>
+        <div class="gallery-card g1"><span class="tag">Add Photo</span><span class="label">Flowers &amp; plants for sale</span></div>
+        <div class="gallery-card g6"><span class="tag">Add Photo</span><span class="label">Monthly farm hosting</span></div>
+      </div>
+      <div class="placeholder-note">Placeholder tiles — swap in your own photography</div>
+    </div>
+    <div class="cta-row">
+      <div class="cta-btn" onclick="alert('Link this to a bookings or shop flow')">Book a Farm Visit</div>
+    </div>
+  </div>
+
+  <!-- ================= TRUE RELIGION ================= -->
+  <div class="view" id="true-religion">
+    <div class="detail-hero">
+      <div class="code">05 — Philanthropy</div>
+      <h1>True Religion</h1>
+      <div class="tagline">A door held open, not a hand held out.</div>
+      <p class="overview">True Religion exists to put resources, mentorship, and access in
+        front of underprivileged girls before the world tells them what they can't do. A
+        hands-on volunteer program gives girls practical experience before they choose their
+        own path forward. It is the house's long-term ledger entry — the one measured in
+        decades, not quarters.</p>
+    </div>
+    <div class="section-block">
+      <h4>The Work</h4>
+      <div class="gallery-grid">
+        <div class="gallery-card g7"><span class="tag">Add Photo</span><span class="label">Mentorship session</span></div>
+        <div class="gallery-card g6"><span class="tag">Add Photo</span><span class="label">Farm volunteer program</span></div>
+        <div class="gallery-card g4"><span class="tag">Add Photo</span><span class="label">Cohort gathering</span></div>
+      </div>
+      <div class="placeholder-note">Placeholder tiles — swap in your own photography</div>
+    </div>
+    <div class="cta-row">
+      <div class="cta-btn" onclick="goTo('get-involved')">Get Involved</div>
+    </div>
+  </div>
+
+  <!-- ================= GET INVOLVED ================= -->
+  <div class="view" id="get-involved">
+    <div class="detail-hero">
+      <div class="code">05 — Philanthropy</div>
+      <h1>Get Involved</h1>
+      <div class="tagline">Two doors. Pick one, or both.</div>
+      <p class="overview">True Religion runs on people who show up, not just people who care.
+        Here's where that actually goes.</p>
+    </div>
+
+    <div class="section-block involve-grid">
+      <div class="involve-card">
+        <div class="ic-label">Donate</div>
+        <p class="ic-desc">Funds go directly toward access, supplies, and mentorship
+          programming for girls in the program.</p>
+        <div class="cta-btn" onclick="alert('Link this to a payment/donation flow — Mobile Money, bank transfer, etc.')">Donate Now</div>
+      </div>
+      <div class="involve-card">
+        <div class="ic-label">Provide Mentorship</div>
+        <p class="ic-desc">Bring your own skill or trade and mentor a girl directly, on the
+          farm or off it.</p>
+        <div class="cta-btn" onclick="alert('Link this to a mentor sign-up form')">Become a Mentor</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function goTo(id){
+    location.hash = '/' + id;
+  }
+  function goHome(){
+    location.hash = '';
+  }
+
+  function render(){
+    const hash = location.hash.replace('#/', '').replace('#','');
+    const views = document.querySelectorAll('.view');
+    let target = document.getElementById(hash);
+    if(!target){ target = document.getElementById('landing'); }
+
+    views.forEach(v => v.classList.remove('active'));
+    target.classList.add('active');
+
+    if(target.id === 'landing'){
+      document.body.classList.remove('detail');
+    } else {
+      document.body.classList.add('detail');
+    }
+    window.scrollTo(0,0);
+  }
+
+  window.addEventListener('hashchange', render);
+  render();
+</script>
+
+</body>
+</html>
